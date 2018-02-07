@@ -1,0 +1,32 @@
+- hosts: all
+  remote_user: ubuntu
+  become: true
+  vars:
+    plugin_dir: "/usr/libexec/kubernetes/kubelet-plugins/volume/exec"
+    repo: https://github.com/kapilt/k8s-ebs-flexvol.git
+    driver_name: ebs
+    driver_vendor: c7n
+    driver_dir: "{{ plugin_dir }}/{{ driver_vendor }}~{{ driver_name }}"
+
+  tasks:
+    - name: pull flex driver
+      git:
+        repo: "{{ repo }}"
+        dest: "{{ driver_dir }}"
+
+    - name: dependency install
+      pip:
+        requirements: "{{ driver_dir }}/requirements.txt"
+        virtualenv: "{{ driver_dir }}"
+
+    - name: driver install
+      command: "./bin/python setup.py"
+      args:
+        chdir: "{{ driver_dir }}"
+        creates: "{{ driver_dir }}/bin/ebs-flexvol"
+
+    - name: symlink driver
+      file:
+        src: "{{ driver_dir }}/bin/ebs-flexvol"
+        dest: "{{ driver_dir }}/{{ driver_name }}"
+        state: link
