@@ -12,9 +12,8 @@ log = logging.getLogger('ebs-flexvol')
 @click.group()
 def cli():
     """aws ebs flexvolume"""
-    logging.basicConfig
     logging.getLogger('boto3').setLevel(logging.WARNING)
-    logging.setFormatter(
+    logging.basicConfig(
         filename='/flexdriver.log',
         level=logging.INFO,
         format="%(asctime)s: %(name)s:%(levelname)s %(message)s")
