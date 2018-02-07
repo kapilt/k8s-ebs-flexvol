@@ -20,7 +20,7 @@
         virtualenv: "{{ driver_dir }}"
 
     - name: driver install
-      command: "./bin/python setup.py"
+      command: "./bin/python setup.py develop"
       args:
         chdir: "{{ driver_dir }}"
         creates: "{{ driver_dir }}/bin/ebs-flexvol"
