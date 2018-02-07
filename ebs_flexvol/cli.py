@@ -22,37 +22,37 @@ def cli():
 
 @cli.command()
 def init():
-    return json.dumps(
-        {'status': Success, 'capabilities': {'attach': True}})
+    return click.echo(json.dumps(
+        {'status': Success, 'capabilities': {'attach': True}}))
 
 
 @cli.command()
 @click.argument('options')
 @click.argument('node')
 def attach(options, node):
-    return json.dumps(
-        {'status': Success, 'device': '/dev/xvdf'})
+    return click.echo(json.dumps(
+        {'status': Success, 'device': '/dev/xvdf'}))
 
 
 @cli.command()
 @click.argument('device_name')
 @click.argument('node')
 def detach(device_name, node):
-    return json.dumps({'status': Success})
+    return click.echo(json.dumps({'status': Success}))
 
 
 @cli.command()
 @click.argument('options')
 @click.argument('node')
 def isattached(options, node):
-    return json.dumps({'status': Success, 'attached': True})
+    return click.echo(json.dumps({'status': Success, 'attached': True}))
 
 
 @cli.command()
 @click.argument('mount_device')
 @click.argument('options')
 def wait_for_attach(mount_device, options):
-    return json.dumps(
-        {'status': Success})
+    return click.echo(json.dumps(
+        {'status': Success}))
 
 
