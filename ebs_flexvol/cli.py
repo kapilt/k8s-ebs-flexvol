@@ -23,7 +23,7 @@ def cli():
 @cli.command()
 def init():
     return click.echo(json.dumps(
-        {'status': Success, 'capabilities': {'attach': True}}))
+        {'status': Success, 'capabilities': {'attach': True}}, indent=2))
 
 
 @cli.command()
@@ -31,21 +31,21 @@ def init():
 @click.argument('node')
 def attach(options, node):
     return click.echo(json.dumps(
-        {'status': Success, 'device': '/dev/xvdf'}))
+        {'status': Success, 'device': '/dev/xvdf'}, indent=2))
 
 
 @cli.command()
 @click.argument('device_name')
 @click.argument('node')
 def detach(device_name, node):
-    return click.echo(json.dumps({'status': Success}))
+    return click.echo(json.dumps({'status': Success}, indent=2))
 
 
 @cli.command()
 @click.argument('options')
 @click.argument('node')
 def isattached(options, node):
-    return click.echo(json.dumps({'status': Success, 'attached': True}))
+    return click.echo(json.dumps({'status': Success, 'attached': True}, indent=2))
 
 
 @cli.command()
@@ -53,6 +53,6 @@ def isattached(options, node):
 @click.argument('options')
 def wait_for_attach(mount_device, options):
     return click.echo(json.dumps(
-        {'status': Success}))
+        {'status': Success}, indent=2))
 
 
