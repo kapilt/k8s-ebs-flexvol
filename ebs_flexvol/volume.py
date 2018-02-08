@@ -1,20 +1,19 @@
-import logging
-
 import boto3
 import contextlib
 import fnmatch
+import logging
 import os
 import string
 
 from botocore.vendored import requests
 
-
-log = logging.getLogger('bunker.volumemgr')
+log = logging.getLogger('ebs-flexvolmgr')
 
 
 class VolumeManager(object):
 
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         self.session = boto3.Session()
         self.client = self.session.client('ec2')
         self.instance_id = None

@@ -9,7 +9,7 @@ Success = 'Success'
 log = logging.getLogger('ebs-flexvol')
 
 
-@click.group()
+@click.group(nvoke_without_command=True)
 def cli():
     """aws ebs flexvolume"""
     logging.getLogger('boto3').setLevel(logging.WARNING)
