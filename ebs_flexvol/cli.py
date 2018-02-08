@@ -1,18 +1,34 @@
+from __future__ import print_function
+
 import click
 import json
+import hashlib
 import logging
 import volume
 import sys
 
-Success = 'Success'
-
 log = logging.getLogger('ebs-flexvol')
 
 
-@click.group(invoke_without_command=True)
+class Result(object):
+    Success = "Success"
+    Error = "Failure"
+    NotSupported = "Not supported"
+
+
+def error(msg):
+    print(json.dumps(msg), file=sys.stderr)
+    sys.exit(1)
+
+
+def output(msg):
+    print(json.dumps(msg), file=sys.stdout)
+    sys.exit(0)
+
+
+@click.group()
 def cli():
     """aws ebs flexvolume"""
-    logging.getLogger('boto3').setLevel(logging.WARNING)
     logging.basicConfig(
         filename='/flexdriver.log',
         level=logging.INFO,
@@ -23,36 +39,76 @@ def cli():
 @cli.command()
 def init():
     return click.echo(json.dumps(
-        {'status': Success, 'capabilities': {'attach': True}}, indent=2))
+        {'status': Result.Success, 'capabilities': {'attach': True}},
+        indent=2))
 
 
 @cli.command()
-@click.argument('options')
+@click.argument('params')
+def getvolumename(params):
+    params = json.loads(params)
+    return click.echo(json.dumps({
+        'status': Result.NotSupported}))
+
+    click.echo(json.dumps({
+        'status': Result.Success,
+        'volumeName': hashlib.md5(
+            params.get('kubernetes.io/pvOrVolumeName', '')).hexdigest()},
+                          indent=2))
+
+
+@cli.command()
+@click.argument('params')
 @click.argument('node')
-def attach(options, node):
+def attach(params, node):
     return click.echo(json.dumps(
-        {'status': Success, 'device': '/dev/xvdf'}, indent=2))
+        {'status': Result.Success, 'device': '/dev/xvdf'}, indent=2))
 
 
 @cli.command()
 @click.argument('device_name')
 @click.argument('node')
 def detach(device_name, node):
-    return click.echo(json.dumps({'status': Success}, indent=2))
+    return click.echo(json.dumps(
+        {'status': Result.Success}, indent=2))
 
 
 @cli.command()
 @click.argument('options')
 @click.argument('node')
 def isattached(options, node):
-    return click.echo(json.dumps({'status': Success, 'attached': True}, indent=2))
+    return click.echo(json.dumps(
+        {'status': Result.Success, 'attached': True}, indent=2))
 
 
 @cli.command()
 @click.argument('mount_device')
 @click.argument('options')
-def wait_for_attach(mount_device, options):
+def waitforattach(mount_device, options):
     return click.echo(json.dumps(
-        {'status': Success}, indent=2))
+        {'status': Result.Success}, indent=2))
 
+
+@cli.command()
+@click.argument('mount_device')
+@click.argument('options')
+def waitfordetach(mount_device, options):
+    return click.echo(json.dumps(
+        {'status': Result.Success}, indent=2))
+
+
+@cli.command()
+@click.argument("x")
+@click.argument("y")
+def mount(x, y):
+    return click.echo(json.dumps(
+        {'status': Result.Success}, indent=2))
+
+
+@cli.command()
+@click.argument("x")
+@click.argument("y")
+def unmount(x, y):
+    return click.echo(json.dumps(
+        {'status': Result.Success}, indent=2))
 

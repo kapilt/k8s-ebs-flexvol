@@ -9,10 +9,15 @@
     driver_dir: "{{ plugin_dir }}/{{ driver_vendor }}~{{ driver_name }}"
 
   tasks:
-    - name: pull flex driver
-      git:
-        repo: "{{ repo }}"
+    - name: push flex driver
+      synchronize:
+        src: ./
         dest: "{{ driver_dir }}"
+
+#    - name: pull flex driver
+#      git:
+#        repo: "{{ repo }}"
+#        dest: "{{ driver_dir }}"
 
     - name: dependency install
       pip:
@@ -30,3 +35,7 @@
         src: "{{ driver_dir }}/bin/ebs-flexvol"
         dest: "{{ driver_dir }}/{{ driver_name }}"
         state: link
+
+    - name: Restart kubelet
+      become: true
+      shell: systemctl restart kubelet
